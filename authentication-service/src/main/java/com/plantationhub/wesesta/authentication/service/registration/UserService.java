@@ -21,4 +21,7 @@ public class UserService {
     public Optional<AppUser> findByMail(String email){
         return userRepository.findByEmail(email);
     }
+    public void deactivateUser(String email){
+        userRepository.deactivateUser(email);
+    }
 }
