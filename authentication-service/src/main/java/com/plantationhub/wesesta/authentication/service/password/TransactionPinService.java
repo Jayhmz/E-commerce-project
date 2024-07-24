@@ -1,4 +1,4 @@
-package com.plantationhub.wesesta.authentication.service.registration;
+package com.plantationhub.wesesta.authentication.service.password;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 @Service
-public class PinGeneratorService {
+public class TransactionPinService {
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public PinGeneratorService(PasswordEncoder passwordEncoder) {
+    public TransactionPinService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
