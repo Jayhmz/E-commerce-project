@@ -9,6 +9,13 @@
     <name>Wesesta Payment Service</name>
     <description>Wesesta Payment Service</description>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.1</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
@@ -20,6 +27,7 @@
     <modules>
         <module>authentication-service</module>
         <module>wallet-service</module>
+        <module>email-service</module>
     </modules>
 
 </project>
