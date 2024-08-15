@@ -1,4 +1,4 @@
-package com.plantationhub.email_service;
+package com.plantationhub.email;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

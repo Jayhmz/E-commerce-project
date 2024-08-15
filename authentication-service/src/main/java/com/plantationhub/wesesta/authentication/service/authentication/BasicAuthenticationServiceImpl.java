@@ -33,7 +33,6 @@ public class BasicAuthenticationServiceImpl implements AuthenticationService{
     @Autowired
     private UserService userService;
 
-
     @Override
     public String authenticate(SignInDTO signInDTO) {
         var authenticate = authenticationManager.authenticate(
@@ -41,6 +40,7 @@ public class BasicAuthenticationServiceImpl implements AuthenticationService{
         );
         if (authenticate.isAuthenticated()){
             var appUser = (AppUser) authenticate.getPrincipal();
+            //send login notification email
             return  jwtUtil.generateToken(getJwtDetails(appUser.getFirstName(), getRoles(authenticate)), secretKey);//jwt token
         }else{
             throw new BadCredentialsException("Incorrect username or password");
