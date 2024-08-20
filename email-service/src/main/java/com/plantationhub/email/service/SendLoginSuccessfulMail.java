@@ -21,6 +21,7 @@ public class SendLoginSuccessfulMail implements SendMail{
 
     @Override
     public void sendMail(String email, String username) throws MessagingException {
+        log.info("inside the send mail service");
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
