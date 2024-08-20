@@ -29,7 +29,6 @@ public class RegistrationController {
         onboardNewUserService.onboardUser(onboardUserDTO);
         return new ResponseEntity<String>("Registration successful", HttpStatus.CREATED);
     }
-
     @PostMapping("/resend-mail-token")
     public ResponseEntity<?> resendVerifyMail(@Valid @RequestBody ResendMailTokenDTO resendMailTokenDTO){
         onboardNewUserService.regenerateMailToken(resendMailTokenDTO.getEmail());

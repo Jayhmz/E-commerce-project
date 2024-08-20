@@ -7,7 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "app_users")
+@Entity
+@Table(name = "app_users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,4 +34,6 @@ public class AppUser {
     @Column(nullable = false, columnDefinition = "ENUM('ADMIN', 'USER', 'CUSTOMER_CARE', 'AGENT')")
     @Enumerated(EnumType.STRING)
     private Roles role;
+    @Column(name = "isActive", columnDefinition = "BIT DEFAULT b'1'", nullable = false)
+    private boolean isActive = true;
 }

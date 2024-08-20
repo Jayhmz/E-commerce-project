@@ -27,4 +27,9 @@ public class AuthenticationController {
     public ResponseEntity<?> login(@Valid @RequestBody SignInDTO signInDTO){
         return new ResponseEntity<>(authenticationService.authenticate(signInDTO), HttpStatus.OK);
     }
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody SignInDTO signInDTO){
+        return new ResponseEntity<>(authenticationService.authenticate(signInDTO), HttpStatus.OK);
+    }
+
 }
