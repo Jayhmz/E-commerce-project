@@ -1,5 +1,6 @@
 package com.plantationhub.wesesta.authentication.service.authentication;
 
+import com.plantationhub.wesesta.authentication.client.EmailServiceClient;
 import com.plantationhub.wesesta.authentication.dto.SignInDTO;
 import com.plantationhub.wesesta.authentication.jwt.JwtUserDetails;
 import com.plantationhub.wesesta.authentication.jwt.JwtUtil;
@@ -8,6 +9,7 @@ import com.plantationhub.wesesta.authentication.service.registration.UserService
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,6 +34,9 @@ public class BasicAuthenticationServiceImpl implements AuthenticationService{
     private JwtUtil jwtUtil;
     @Autowired
     private UserService userService;
+    @Autowired
+    private EmailServiceClient emailServiceClient;
+
 
     @Override
     public String authenticate(SignInDTO signInDTO) {
@@ -40,8 +45,12 @@ public class BasicAuthenticationServiceImpl implements AuthenticationService{
         );
         if (authenticate.isAuthenticated()){
             var appUser = (AppUser) authenticate.getPrincipal();
+
+            var jwtToken = jwtUtil.generateToken(getJwtDetails(appUser.getFirstName(), getRoles(authenticate)), secretKey);
             //send login notification email
-            return  jwtUtil.generateToken(getJwtDetails(appUser.getFirstName(), getRoles(authenticate)), secretKey);//jwt token
+            ResponseEntity<String> response = emailServiceClient.sendLoginAlertMail(appUser.getEmail(), appUser.getFirstName());
+            log.info("Message: {}",response.getBody());
+            return jwtToken;
         }else{
             throw new BadCredentialsException("Incorrect username or password");
         }
