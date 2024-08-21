@@ -44,6 +44,7 @@ public class BasicRegistrationService implements OnboardNewUserService {
         userService.saveUser(newUser);
         generateMailToken(newUser);
         //feign client for generating wallet comes here...
+        //feigh client to send registration mail comes up
     }
 
     private void generatePhoneToken(AppUser newUser) {
