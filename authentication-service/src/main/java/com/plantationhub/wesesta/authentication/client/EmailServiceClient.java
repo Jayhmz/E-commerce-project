@@ -10,4 +10,10 @@ public interface EmailServiceClient {
 
     @PostMapping("/send-login-notification")
     ResponseEntity<String> sendLoginAlertMail(@RequestParam String email, @RequestParam String username);
+
+    @PostMapping("/send-onboarding-token-mail")
+    void sendRegistrationTokenMail(@RequestParam String email, @RequestParam int token);
+
+    @PostMapping("/send-registration-successful-mail")
+    ResponseEntity<?> sendOnboardSuccessMail(@RequestParam String email);
 }
