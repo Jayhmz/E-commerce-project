@@ -26,10 +26,4 @@ public class AuthenticationMailController {
         return new ResponseEntity<>("email sent successfully", HttpStatus.OK);
     }
 
-    @GetMapping("/send-registration-mail")
-    public ResponseEntity<?> sendRegistrationMail(String email, String username) throws MessagingException {
-        sendMail.sendMail(email, username);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
 }
