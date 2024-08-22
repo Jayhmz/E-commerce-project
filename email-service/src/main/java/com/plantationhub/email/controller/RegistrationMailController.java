@@ -11,19 +11,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/mail")
 @Slf4j
-public class AuthenticationMailController {
+public class RegistrationMailController {
 
     private final SendMail sendMail;
 
-    public AuthenticationMailController(@Qualifier("sendLoginSuccessfulMail") SendMail sendMail) {
+    public RegistrationMailController(@Qualifier("sendRegistrationSuccessfulMail") SendMail sendMail) {
         this.sendMail = sendMail;
     }
 
-    @PostMapping("/send-login-notification")
-    public ResponseEntity<?> sendLoginAlertMail(@RequestParam String email, @RequestParam String username) throws MessagingException {
-        sendMail.sendMail(email, username);
-        log.info("inside the send login notification controller");
-        return new ResponseEntity<>("email sent successfully", HttpStatus.OK);
+    @PostMapping("/send-onboarding-token-mail")
+    public ResponseEntity<?> sendRegistrationTokenMail(@RequestParam String email, @RequestParam int token) throws MessagingException {
+        sendMail.sendMail(email, String.valueOf(token));
+        return new ResponseEntity<>("Email has been sent successfully",HttpStatus.OK);
     }
 
 }

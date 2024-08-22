@@ -18,14 +18,15 @@ public class SendRegistrationSuccessfulMail implements SendMail{
     private ISpringTemplateEngine thymeleafTemplateEngine;
 
     @Override
-    public void sendMail(String email, String username) throws MessagingException {
+    public void sendMail(String email, String token) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
         Context context = new Context();
-        context.setVariable("user", username);
+        context.setVariable("token", token);
 
-        String htmlContent = thymeleafTemplateEngine.process("login-alert.html", context);
+        String htmlContent = thymeleafTemplateEngine.process("successful-onboarding.html", context);
+        helper.setSubject("Confirm Registration");
         helper.setText(htmlContent, true);
         helper.setTo(email);
         mailSender.send(message);
