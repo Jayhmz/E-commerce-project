@@ -30,7 +30,7 @@ public class AccountRecoveryService {
                 .orElseThrow(()-> new BadCredentialsException("Unknown email address"));
         user.setActive(false);
         userService.saveUser(user);
-        onboardUserService.regenerateMailToken(user.getEmail());
+        onboardUserService.regenerateToken(user.getEmail());
     }
 
     @Transactional
