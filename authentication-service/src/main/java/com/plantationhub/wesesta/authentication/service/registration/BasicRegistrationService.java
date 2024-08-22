@@ -1,6 +1,5 @@
 package com.plantationhub.wesesta.authentication.service.registration;
 
-import com.plantationhub.wesesta.authentication.client.EmailServiceClient;
 import com.plantationhub.wesesta.authentication.dto.OnboardUserDTO;
 import com.plantationhub.wesesta.authentication.enums.Roles;
 import com.plantationhub.wesesta.authentication.model.AppUser;
@@ -15,24 +14,20 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class BasicRegistrationService implements OnboardNewUserService {
-
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final TransactionPinService transactionPinService;
     private final TokenServiceImpl tokenService;
     private final TwilioSmsService twilioSmsService;
-    private final EmailServiceClient emailServiceClient;
 
     @Autowired
     public BasicRegistrationService(UserService userService, PasswordEncoder passwordEncoder,
-                                    TransactionPinService transactionPinService, TokenServiceImpl tokenService,
-                                    TwilioSmsService twilioSmsService, EmailServiceClient emailServiceClient) {
+                                    TransactionPinService transactionPinService, TokenServiceImpl tokenService, TwilioSmsService twilioSmsService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.transactionPinService = transactionPinService;
         this.tokenService = tokenService;
         this.twilioSmsService = twilioSmsService;
-        this.emailServiceClient = emailServiceClient;
     }
 
     @Override
@@ -47,21 +42,31 @@ public class BasicRegistrationService implements OnboardNewUserService {
                 .isActive(true)
                 .build();
         userService.saveUser(newUser);
-        generateToken(newUser);
+        generateMailToken(newUser);
+        //feign client for generating wallet comes here...
+        //feigh client to send registration mail comes up
     }
 
-    private void generateToken(AppUser newUser) {
+    private void generatePhoneToken(AppUser newUser) {
         var token = tokenService.generateToken();
-        tokenService.saveMailToken(token, newUser);
-        emailServiceClient.sendRegistrationTokenMail(newUser.getEmail(), token);
-        log.info("token is --------> {}", token);
-        log.info("token mail sent successfully...");
+        tokenService.savePhoneToken(token, newUser);
+        //create feign client for notification service
+        twilioSmsService.sendTokenSms(token, newUser.getPhone());
     }
 
-    public void regenerateToken(String email){
+    private void generateMailToken(AppUser newUser) {
+        var token = tokenService.generateToken();
+       log.info("token is --------> " + token);
+        tokenService.saveMailToken(token, newUser);
+        //create feign client for notification service
+        //create feign client for wallet service
+    }
+
+    public void regenerateMailToken(String email){
         var token = tokenService.generateToken();
         tokenService.updateMailToken(token, email);
-        emailServiceClient.sendRegistrationTokenMail(email, token);
+        //create feign client for notification service
+        //create feign client for wallet service
         log.info("Mail token resent successfully : {}", token);
     }
 }
