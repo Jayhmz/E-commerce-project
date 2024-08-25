@@ -31,7 +31,7 @@ public class SendLoginSuccessfulMail implements SendMail{
         String htmlContent = thymeleafTemplateEngine.process("login-alert.html", context);
         helper.setText(htmlContent, true);
         helper.setTo(email);
-        //mailSender.send(message);
+        mailSender.send(message);
         log.info("The email has been successfully sent to {}", email);
     }
 
