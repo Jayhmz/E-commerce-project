@@ -12,7 +12,7 @@ import org.thymeleaf.spring6.ISpringTemplateEngine;
 
 @Service
 @Slf4j
-public class SendLoginSuccessfulMail implements SendMail{
+public class SendChangePasswordMail implements SendMail{
 
     @Autowired
     private JavaMailSender mailSender;
@@ -28,8 +28,9 @@ public class SendLoginSuccessfulMail implements SendMail{
         Context context = new Context();
         context.setVariable("user", username);
 
-        String htmlContent = thymeleafTemplateEngine.process("login-alert.html", context);
+        String htmlContent = thymeleafTemplateEngine.process("password-change-alert.html", context);
         helper.setText(htmlContent, true);
+        helper.setSubject("Password Changed");
         helper.setTo(email);
         mailSender.send(message);
         log.info("The email has been successfully sent to {}", email);
