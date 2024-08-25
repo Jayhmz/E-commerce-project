@@ -15,5 +15,11 @@ public interface EmailServiceClient {
     void sendRegistrationTokenMail(@RequestParam String email, @RequestParam int token);
 
     @PostMapping("/send-registration-successful-mail")
-    ResponseEntity<?> sendOnboardSuccessMail(@RequestParam String email);
+    void sendOnboardSuccessMail(@RequestParam String email);
+
+    @PostMapping("/send-recover-password-token-mail")
+    void sendRecoverPasswordTokenMail(String email, int token);
+
+    @PostMapping("/send-password-change-successful-mail")
+    void sendChangePasswordAlertMail(String email, String username);
 }

@@ -61,6 +61,13 @@ public class BasicRegistrationService implements OnboardNewUserService {
         var token = tokenService.generateToken();
         tokenService.updateMailToken(token, email);
         emailServiceClient.sendRegistrationTokenMail(email, token);
-        log.info("Mail token resent successfully : {}", token);
+        log.info("Regenerated token resent successfully : {}", token);
+    }
+
+    public void recoverPasswordToken(String email){
+        var token = tokenService.generateToken();
+        tokenService.updateMailToken(token, email);
+        emailServiceClient.sendRecoverPasswordTokenMail(email, token);
+        log.info("Recovery password token resent successfully : {}", token);
     }
 }

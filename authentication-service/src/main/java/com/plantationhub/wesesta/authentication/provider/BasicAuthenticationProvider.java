@@ -26,7 +26,7 @@ public class BasicAuthenticationProvider implements AuthenticationProvider {
         var password = authentication.getCredentials().toString();
 
         var userDetails = userService.findByPhoneOrEmail(username)
-                .orElseThrow(() -> new BadCredentialsException("Incorrect username/password"));
+                .orElseThrow(() -> new BadCredentialsException("Account is unverified"));
         if (passwordEncoder.matches(password, userDetails.getPassword())){
             return new UsernamePasswordAuthenticationToken(userDetails, password, Collections.singleton(new SimpleGrantedAuthority(userDetails.getRole().name())));
         }else{
