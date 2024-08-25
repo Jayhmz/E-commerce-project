@@ -21,10 +21,10 @@ public class AccountRecoveryController {
         this.accountRecoveryService = accountRecoveryService;
     }
 
-    @PostMapping("/send-forgot-password-token")
-    public ResponseEntity<?> resendVerifyMail(@Valid @RequestBody ResendMailTokenDTO resendMailTokenDTO){
+    @PostMapping("/send-change-password-token")
+    public ResponseEntity<?> sendChangePasswordMail(@Valid @RequestBody ResendMailTokenDTO resendMailTokenDTO){
         accountRecoveryService.sendAccountRecoveryMail(resendMailTokenDTO);
-        return new ResponseEntity<>("Token sent to "+resendMailTokenDTO.getEmail()+"", HttpStatus.OK);
+        return new ResponseEntity<>("Token sent to "+resendMailTokenDTO.getEmail(), HttpStatus.OK);
     }
 
     @PutMapping("/change-password")
@@ -32,5 +32,4 @@ public class AccountRecoveryController {
         accountRecoveryService.changePassword(changePasswordDTO);
         return new ResponseEntity<>("Account modified successfully", HttpStatus.ACCEPTED);
     }
-
 }

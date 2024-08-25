@@ -1,6 +1,7 @@
 package com.plantationhub.wesesta.authentication.service.token;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.plantationhub.wesesta.authentication.client.EmailServiceClient;
 import com.plantationhub.wesesta.authentication.enums.Roles;
 import com.plantationhub.wesesta.authentication.jwt.JwtUserDetails;
 import com.plantationhub.wesesta.authentication.jwt.JwtUtil;
@@ -30,14 +31,14 @@ public class ValidateEmailToken implements ValidateTokenService {
 
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+    private final EmailServiceClient emailServiceClient;
 
     @Autowired
-    public ValidateEmailToken(TokenService tokenService, PasswordEncoder passwordEncoder, UserService userService) {
+    public ValidateEmailToken(TokenService tokenService, PasswordEncoder passwordEncoder, EmailServiceClient emailServiceClient) {
         this.tokenService = tokenService;
         this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
+        this.emailServiceClient = emailServiceClient;
     }
 
     /**
@@ -62,6 +63,8 @@ public class ValidateEmailToken implements ValidateTokenService {
                     Collections.singleton(new SimpleGrantedAuthority(
                             Roles.valueOf((String) tokenResponse.get("role")).name())));
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            //send registration complete successfully mail here...
+            emailServiceClient.sendOnboardSuccessMail(email);
             return new JwtUtil().generatePhoneJwtToken(getJwtDetails(tokenResponse), key);
         }else {
             throw new BadCredentialsException("Oops, unauthorized credentials. not found");
