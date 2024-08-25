@@ -10,8 +10,14 @@ import java.util.Optional;
 
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     Optional<AppUser> findByEmail(String email);
-    @Query(value = "SELECT u FROM AppUser u WHERE u.isActive = true AND u.phone = :phoneOrEmail OR u.email = :phoneOrEmail")
+
+        @Query(value = "SELECT u FROM AppUser u JOIN Token t ON u.userId = t.user.userId " +
+            "WHERE u.isActive = true " +
+            "AND u.phone = :phoneOrEmail " +
+            "OR u.email = :phoneOrEmail " +
+            "AND t.isEmailVerified != false")
     Optional<AppUser> findByPhoneOrEmail(@Param("phoneOrEmail") String phoneOrEmail);
+
     @Modifying
     @Query(value = "UPDATE AppUser u SET u.isActive = false WHERE u.email = :email")
     void deactivateUser(@Param("email") String email);

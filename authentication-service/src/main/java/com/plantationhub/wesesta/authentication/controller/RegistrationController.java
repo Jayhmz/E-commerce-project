@@ -27,11 +27,11 @@ public class RegistrationController {
     @PostMapping("/register")
     public ResponseEntity<?> onboardUser(@Valid @RequestBody OnboardUserDTO onboardUserDTO){
         onboardNewUserService.onboardUser(onboardUserDTO);
-        return new ResponseEntity<String>("Registration successful", HttpStatus.CREATED);
+        return new ResponseEntity<>("Registration successful", HttpStatus.CREATED);
     }
     @PostMapping("/resend-mail-token")
     public ResponseEntity<?> resendVerifyMail(@Valid @RequestBody ResendMailTokenDTO resendMailTokenDTO){
-        onboardNewUserService.regenerateMailToken(resendMailTokenDTO.getEmail());
-        return new ResponseEntity<String>("Token sent successfully.", HttpStatus.OK);
+        onboardNewUserService.regenerateToken(resendMailTokenDTO.getEmail());
+        return new ResponseEntity<>("Token sent successfully.", HttpStatus.OK);
     }
 }
