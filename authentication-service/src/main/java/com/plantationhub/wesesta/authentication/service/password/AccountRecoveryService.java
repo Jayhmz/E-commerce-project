@@ -6,6 +6,8 @@ import com.plantationhub.wesesta.authentication.dto.ResendMailTokenDTO;
 import com.plantationhub.wesesta.authentication.service.registration.BasicRegistrationService;
 import com.plantationhub.wesesta.authentication.service.registration.UserService;
 import com.plantationhub.wesesta.authentication.service.token.TokenService;
+import com.plantationhub.wesesta.authentication.service.token.ValidateTokenService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,14 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountRecoveryService {
     private final BasicRegistrationService onboardUserService;
     private final UserService userService;
-    private final TokenService tokenService;
+    private final ValidateTokenService validateTokenService;
     private final PasswordEncoder passwordEncoder;
     private final EmailServiceClient emailServiceClient;
 
-    public AccountRecoveryService(BasicRegistrationService onboardUserService, UserService userService, TokenService tokenService, PasswordEncoder passwordEncoder, EmailServiceClient emailServiceClient) {
+    public AccountRecoveryService(BasicRegistrationService onboardUserService, UserService userService,
+                                  @Qualifier("validateEmailService") ValidateTokenService validateTokenService, PasswordEncoder passwordEncoder, EmailServiceClient emailServiceClient) {
         this.onboardUserService = onboardUserService;
         this.userService = userService;
-        this.tokenService = tokenService;
+        this.validateTokenService = validateTokenService;
         this.passwordEncoder = passwordEncoder;
         this.emailServiceClient = emailServiceClient;
     }
@@ -40,9 +43,10 @@ public class AccountRecoveryService {
     public void changePassword(ChangePasswordDTO changePasswordDTO){
         var user = userService.findByMail(changePasswordDTO.getEmail())
                 .orElseThrow(()-> new BadCredentialsException("Unknown email address"));
-        tokenService.updateMailToken(Integer.parseInt(changePasswordDTO.getToken()), user.getEmail());
+        validateTokenService.validateToken(changePasswordDTO.getToken(), user.getEmail());
         user.setPassword(passwordEncoder.encode(changePasswordDTO.getPassword()));
+        user.setActive(true);
         userService.saveUser(user);
-        emailServiceClient.sendChangePasswordAlertMail(user.getEmail(), user.getFirstName());
+        emailServiceClient.sendChangePasswordAlert(user.getEmail(), user.getFirstName());
     }
 }
