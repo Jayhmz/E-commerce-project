@@ -12,7 +12,7 @@ import org.thymeleaf.spring6.ISpringTemplateEngine;
 
 @Service
 @Slf4j
-public class SendChangePasswordMail implements SendMail{
+public class SendChangePasswordTokenMail implements SendMail{
 
     @Autowired
     private JavaMailSender mailSender;
@@ -20,15 +20,15 @@ public class SendChangePasswordMail implements SendMail{
     private ISpringTemplateEngine thymeleafTemplateEngine;
 
     @Override
-    public void sendMail(String email, String username) throws MessagingException {
+    public void sendMail(String email, String token) throws MessagingException {
         log.info("inside the send change password mail service");
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
         Context context = new Context();
-        context.setVariable("user", username);
+        context.setVariable("token", token);
 
-        String htmlContent = thymeleafTemplateEngine.process("password-change-alert.html", context);
+        String htmlContent = thymeleafTemplateEngine.process("password-change-token.html", context);
         helper.setText(htmlContent, true);
         helper.setSubject("Security Activity Has Occurred ");
         helper.setTo(email);
